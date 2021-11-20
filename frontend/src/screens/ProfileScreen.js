@@ -22,6 +22,8 @@ export default function ProfileScreen() {
   const [deliveryPrice, setDeliveryPrice] = useState('');
   const [sellerPaymentAccountName,setSellerPaymentAccountName]=useState('');
   const [sellerPaymentMobileNumber,setSellerPaymentMobileNumber]=useState('');
+  const [productCategory, setProductCategory] = useState('Packed Food Products');
+  const [sellerProductCategories, setSellerProductCategories] = useState([]);
 
   const userSignin = useSelector((state) => state.userSignin);
   const { userInfo } = userSignin;
@@ -48,6 +50,7 @@ export default function ProfileScreen() {
         setSellerName(user.seller.name);
         setSellerLogo(user.seller.logo);
         setSellerDescription(user.seller.description);
+        setSellerProductCategories(user.seller.sellerProductCategories);
         setMinOrderPrice(user.seller.minOrderPrice);
         setDeliveryPrice(user.seller.deliveryPrice);
         setSellerPaymentAccountName(user.seller.googlePayName);
@@ -73,6 +76,7 @@ export default function ProfileScreen() {
           sellerName,
           sellerLogo,
           sellerDescription,
+          sellerProductCategories,
           minOrderPrice,
           deliveryPrice,
           sellerPaymentAccountName,
@@ -103,6 +107,20 @@ export default function ProfileScreen() {
       setLoadingUpload(false);
     }
   };
+  function categoryAddHandler(e){
+    e.preventDefault();
+    let list=[...sellerProductCategories];
+    if(!list.includes(productCategory)){
+      list.push(productCategory);
+      setSellerProductCategories(list);
+    }
+  }
+  function categoryDeleteHandler(e,category){
+    e.preventDefault();
+    let list=[...sellerProductCategories];
+    list=list.filter(item=>item!==category);
+    setSellerProductCategories(list);
+  }
   return (
     <div>
       <form className="form" onSubmit={submitHandler}>
@@ -183,7 +201,7 @@ export default function ProfileScreen() {
             </div>
             {user.isSeller && (
               <>
-                <h2>Seller</h2>
+                <div><h1>Seller Profile Details</h1></div>
                 <div>
                   <label htmlFor="sellerName">Seller Name</label>
                   <input
@@ -228,6 +246,42 @@ export default function ProfileScreen() {
                     onChange={(e) => setSellerDescription(e.target.value)}
                   ></input>
                 </div>
+                <div >
+                  <label htmlFor="productCategories">Select Product Categories</label>
+                  <div class="selectWithSideButton">
+                    <select id="productCategories" style={{width:"78%"}} onChange={(e) => setProductCategory(e.target.value)}>
+                      <option value="" selected hidden>{productCategory}</option>
+                      <option value="Women beauty">Women beauty</option>
+                      <option value="Women clothing">Women clothing</option>
+                      <option value="Men Clothing">Men Clothing</option>
+                      <option value="Women Footwears">Women Footwears</option>
+                      <option value="Men Footwears">Men Footwears</option>
+                      <option value="Hair Products">Hair Products</option>
+                      <option value="Packed Food Products">Packed Food Products</option>
+                      <option value="Snacks">Snacks</option>
+                      <option value="Indian sweets">Indian sweets</option>
+                      <option value="Dairy Products">Dairy Products</option>
+                      <option value="Supplements">Supplements</option>
+                      <option value="Stationery">Stationery</option>
+                    </select>
+                    <button onClick={categoryAddHandler} style={{width:"20%"}}>Add</button>
+                  </div>
+                </div>
+                <div>
+                <div class="itemsAddBox">
+                {sellerProductCategories.map(category=>{
+                  return(
+                    <div  key={category} className="productCategoryWrapper">
+                      <div className="productCategory">
+                        <span>{category}</span>
+                        <button onClick={(e)=>categoryDeleteHandler(e,category)} className="productCategoryDeleteButton">X</button>
+                      </div>
+                    </div>
+                  ) 
+                })
+                }
+                </div>
+                </div>
                 <div>
                   <label htmlFor="minOrderPrice">Minimum Order Price</label>
                   <input
@@ -268,6 +322,18 @@ export default function ProfileScreen() {
                     onChange={(e) => setSellerPaymentMobileNumber(e.target.value)}
                   ></input>
                 </div>
+                {/* <div>
+                  <label htmlFor="sellerCategory">sellerCategory</label>
+                  <select id="sellerCategory" onChange={(e) => setSellerCategory(e.target.value)}>
+                    <option value="" selected hidden>{sellerCategory}</option>
+                    <option value="Grocery shop" >Grocery shop</option> 
+                    <option value="Women beauty">Women clothing/beauty</option>
+                    <option value="Men Clothing">Men Clothing</option>
+                    <option value="All Clothing">All Clothing</option>
+                    <option value="Supplements">Supplements</option>
+                    <option value="Stationery">Stationery</option>
+                  </select>
+                </div> */}
               </>
             )}
             <div>

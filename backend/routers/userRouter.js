@@ -112,6 +112,8 @@ userRouter.put(
         user.seller.logo = req.body.sellerLogo || user.seller.logo;
         user.seller.description =
           req.body.sellerDescription || user.seller.description;
+        user.seller.sellerProductCategories =
+          req.body.sellerProductCategories || user.seller.sellerProductCategories;
         user.seller.minOrderPrice = req.body.minOrderPrice || user.seller.minOrderPrice;
         user.seller.deliveryPrice = req.body.deliveryPrice || user.seller.deliveryPrice;
         user.seller.googlePayName=

@@ -14,6 +14,7 @@ const userSchema = new mongoose.Schema(
       name: String,
       logo: String,
       description: String,
+      sellerProductCategories:Array,
       minOrderPrice:Number,
       deliveryPrice:Number,
       googlePayName:String,

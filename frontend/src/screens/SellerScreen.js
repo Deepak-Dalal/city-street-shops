@@ -134,15 +134,20 @@ export default function SellerScreen(props) {
               <MessageBox variant="danger">{errorCategories}</MessageBox>
             ) : (
             <div>
+              {loading ? (
+                <LoadingBox></LoadingBox>
+              ) : error ? (
+                <MessageBox variant="danger">{error}</MessageBox>
+              ) : (<>
               <label htmlFor="category">Category</label>
               <select id="category" onChange={(e)=>setCategory(e.target.value)}>
                 <option value="Any">Any</option>
                 {
-                  categories.map((c) => (
+                  user.seller.sellerProductCategories.map((c) => (
                     <option key={c} value={c}>{c}</option>
                   ))
                 }
-              </select>
+              </select></>)}
             </div>
             )}
             <div>

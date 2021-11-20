@@ -588,3 +588,45 @@ img.large {
   background-color:rgb(208, 233, 233);
   display:none;
 }
+
+/*Adding Product categories for seller*/
+
+.selectWithSideButton{
+  display: flex;
+  justify-content: space-between;
+}
+
+.itemsAddBox{
+  background-color: teal;
+  border-radius: 0.5rem;
+  display:flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding-bottom: 10px;
+  padding-right:10px
+}
+.productCategoryWrapper{
+  display:flex;
+  margin:10px 0 0 10px;
+} 
+.productCategory{
+  border: solid white 1px;
+  border-radius: 0.5rem;
+  padding:5px;
+  display:flex;
+  align-items: center;
+  background-color: white;
+}
+.productCategoryDeleteButton{
+  width:10px;
+  height:10px;
+  font-size: 15px;
+  background: none;
+  border: solid black 5x;
+  color:black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin:0 5px 0 5px;
+
+}
