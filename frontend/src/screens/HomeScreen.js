@@ -42,13 +42,15 @@ export default function HomeScreen(props) {
   }, [dispatch, pageNumber,  city]);
   return (
     <div>
-      <div className="horizontal-Center-Div">
-          <label htmlFor="cities"><strong>Choose your city: </strong></label>
-          <select id="cities" class="city" onChange={(e)=>props.history.push(`/city/${e.target.value}/pageNumber/1`)}>
-              <option value="" disabled selected hidden>{city}</option>
-              <option value="Rohtak" >Rohtak</option> 
-              <option value="Gurugram">Gurugram</option>      
-          </select>
+      <div className="city-selector">
+        <div className="city-selector-wrapper">
+            <label htmlFor="cities"><strong>Choose your city: </strong></label>
+            <select id="cities" class="city" onChange={(e)=>props.history.push(`/city/${e.target.value}/pageNumber/1`)}>
+                <option value="" disabled selected hidden>{city}</option>
+                <option value="Rohtak" >Rohtak</option> 
+                <option value="Gurugram">Gurugram</option>      
+            </select>
+        </div>
       </div>
       {/* <h2>Top Sellers</h2>
       {loadingTopSellers ? (
@@ -70,7 +72,7 @@ export default function HomeScreen(props) {
           </Carousel>
         </>
       )} */}
-      <h2>Sellers List</h2>
+      <h2>Sellers List</h2> 
       {loadingSellers ? (
         <LoadingBox></LoadingBox>
       ) : errorSellers ? (

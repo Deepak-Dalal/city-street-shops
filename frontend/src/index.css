@@ -586,9 +586,25 @@ img.large {
 
 .filter-options-container{
   background-color:rgb(208, 233, 233);
-  display:none;
+  display:block;
 }
-
+.filter-search-button-container{
+  display:flex;
+  justify-content:center;
+}
+.filter-search-button{
+  height:25px;
+  font-size: 15px ;
+  margin:10px;
+  display:flex;
+  align-items: center;
+  color:white;
+  background-color: teal;
+  border:none;
+}
+.filter-search-icon{
+  margin-right:5px;
+}
 /*Adding Product categories for seller*/
 
 .selectWithSideButton{
@@ -629,4 +645,12 @@ img.large {
   justify-content: center;
   margin:0 5px 0 5px;
 
+}
+/*city selector*/
+.city-selector{
+  display:flex;
+  justify-content: center;
+}
+#cities{
+  width: 240px;
 }

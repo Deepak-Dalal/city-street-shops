@@ -16,14 +16,13 @@ export default function SellerScreen(props) {
     pageNumber = 1,
   } = useParams();
   const sellerId = props.match.params.id;
-  const name=props.match.params.name || "Any";
-  const searchPlaceHolder=props.match.params.name || "search seller products...";
+  const name=props.match.params.name || "search seller products...";
 
-  const [category, setCategory] = useState('Any');
-  const [min, setMin] = useState(0);
-  const [max, setMax] = useState(0);
-  const [rating, setRating] = useState(0);
-  const [order, setOrder] = useState('newest');
+  const [category, setCategory] = useState(props.match.params.category || 'Any');
+  const [min, setMin] = useState(props.match.params.min || 0);
+  const [max, setMax] = useState(props.match.params.max || 0);
+  const [rating, setRating] = useState(props.match.params.rating || 0);
+  const [order, setOrder] = useState(props.match.params.order || 'newest');
 
   const userDetails = useSelector((state) => state.userDetails);
   const { loading, error, user } = userDetails;
@@ -63,18 +62,29 @@ export default function SellerScreen(props) {
       setMax(1000000);
     }
   }
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(detailsUser(sellerId));
+  function filterSearchHandler(){
     dispatch(listProducts({ 
-      seller: sellerId, pageNumber,
-      name: name !== 'Any' ? name : '',
+      seller: sellerId, pageNumber:1,
+      name: name !== 'search seller products...' ? name : '',
       category: category !== 'Any' ? category : '',
       min,
       max,
       rating,
       order,}));
-  }, [dispatch,sellerId,pageNumber,category, max, min, name, order, rating]);
+    props.history.push(`/seller/${sellerId}/name/${name}/category/${category}/min/${min}/max/${max}/rating/${rating}/order/${order}/pageNumber/1`)  
+  }
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(detailsUser(sellerId));
+    dispatch(listProducts({ 
+      seller: sellerId, pageNumber,
+      name: name !== 'search seller products...' ? name : '',
+      category: category !== 'Any' ? category : '',
+      min,
+      max,
+      rating,
+      order,}));
+  }, [dispatch,sellerId,name,pageNumber]);
   return (
     <div className="row top">
       <div className="col-1">
@@ -113,19 +123,9 @@ export default function SellerScreen(props) {
       </div>    
       <div className="col-3">
         <div className="row center">
-          <SellerProductsSearchBox placeHolder={searchPlaceHolder} sellerId={sellerId}></SellerProductsSearchBox>
+          <SellerProductsSearchBox placeHolder={name} sellerId={sellerId}></SellerProductsSearchBox>
         </div>
-        <button id="filter-button"
-            onClick={(e)=>{
-              if(e.target.nextElementSibling.style.display !== "block"){
-                e.target.nextElementSibling.style.display="block";
-              }
-              else {
-                e.target.nextElementSibling.style.display="none";
-              }
-              console.log(e.target.nextElementSibling.style.display);
-            }}
-          ><i class="fa fa-filter"></i> Filter</button>
+        <h1>Filters</h1>
         <div className="filter-options-container">
           <div className="container-select-boxes-side-to-side">
             {loadingCategories ? (
@@ -141,6 +141,7 @@ export default function SellerScreen(props) {
               ) : (<>
               <label htmlFor="category">Category</label>
               <select id="category" onChange={(e)=>setCategory(e.target.value)}>
+                <option value="" selected hidden>{category}</option>
                 <option value="Any">Any</option>
                 {
                   user.seller.sellerProductCategories.map((c) => (
@@ -153,6 +154,7 @@ export default function SellerScreen(props) {
             <div>
               <label htmlFor="priceRange">Price Range</label>
               <select id="priceRange" onChange={priceRangeChangeHandler}>
+                <option value="" selected hidden>{min==0 && max==0?"Any":"₹"+min+" to "+"₹"+max}</option>
                 {
                   prices.map((p) => (
                     <option key={p.name} value={p.name}>{p.name}</option>
@@ -163,6 +165,7 @@ export default function SellerScreen(props) {
             <div>
               <label htmlFor="averageCustomerRating">Average Customer Rating</label>
               <select id="averageCustomerRating" onChange={(e)=>setRating(e.target.value)}>
+                <option value="" selected hidden>{rating==0?"Any":rating+" or more stars"}</option>
                 {
                   ratings.map((r) => (<>
                     <option key={r.name} value={r.rating}>
@@ -180,12 +183,21 @@ export default function SellerScreen(props) {
                 value={order}
                 onChange={(e)=>setOrder(e.target.value)}
               >
+                <option value="" selected hidden>
+                  {order=='newest'?"Newest Arrivals"
+                  :order=='lowest'?"Price: Low to High"
+                  :order=='highest'?"Price: High to Low"
+                  :"High Customer Rating"}
+                </option>
                 <option value="newest">Newest Arrivals</option>
                 <option value="lowest">Price: Low to High</option>
                 <option value="highest">Price: High to Low</option>
                 <option value="toprated">High Customer Rating</option>
               </select>
             </div>
+          </div>
+          <div className="filter-search-button-container">
+            <button className="filter-search-button" onClick={filterSearchHandler}><i class="fa fa-search filter-search-icon"></i>Search</button>
           </div>
         </div>  
         {loadingProducts ? (
@@ -206,7 +218,7 @@ export default function SellerScreen(props) {
                 <Link
                   className={x + 1 === page ? 'active' : ''}
                   key={x + 1}
-                  to={`/seller/${sellerId}/name/${name}/pageNumber/${x+1}`}
+                  to={`/seller/${sellerId}/name/${name}/category/${category}/min/${min}/max/${max}/rating/${rating}/order/${order}/pageNumber/${x+1}`}
                 >
                   {x + 1}
                 </Link>

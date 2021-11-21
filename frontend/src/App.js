@@ -186,6 +186,7 @@ function App() {
           <Route path="/seller/:id/name/:name" component={SellerScreen} exact></Route>
           <Route path="/seller/:id/pageNumber/:pageNumber" component={SellerScreen} exact></Route>
           <Route path="/seller/:id/name/:name/pageNumber/:pageNumber" component={SellerScreen} exact></Route>
+          <Route path="/seller/:id/name/:name/category/:category/min/:min/max/:max/rating/:rating/order/:order/pageNumber/:pageNumber" component={SellerScreen} exact></Route>
           <Route path="/cart/:id?" component={CartScreen}></Route>
           <Route path="/product/:id" component={ProductScreen} exact></Route>
           <Route
@@ -207,7 +208,7 @@ function App() {
             exact
           ></Route>
           <Route
-            path="/search/name/:name/pageNumber/:pageNumber"
+            path="/search/name/:name/category/:category/min/:min/max/:max/rating/:rating/order/:order/pageNumber/:pageNumber"
             component={SearchScreen}
             exact
           ></Route>

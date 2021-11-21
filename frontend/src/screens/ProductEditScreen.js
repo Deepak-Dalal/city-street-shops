@@ -166,9 +166,18 @@ export default function ProductEditScreen(props) {
               <label htmlFor="category">Category</label>
               <select id="category" onChange={(e) => setCategory(e.target.value)}>
                 <option value="" selected hidden>{category}</option>
-                <option value="Hair Product" >Hair Product</option> 
-                <option value="Food Product">Food Product</option>
-                <option value="Shoes">Shoes</option>
+                <option value="Women beauty">Women beauty</option>
+                <option value="Women clothing">Women clothing</option>
+                <option value="Men Clothing">Men Clothing</option>
+                <option value="Women Footwears">Women Footwears</option>
+                <option value="Men Footwears">Men Footwears</option>
+                <option value="Hair Products">Hair Products</option>
+                <option value="Packed Food Products">Packed Food Products</option>
+                <option value="Snacks">Snacks</option>
+                <option value="Indian sweets">Indian sweets</option>
+                <option value="Dairy Products">Dairy Products</option>
+                <option value="Supplements">Supplements</option>
+                <option value="Stationery">Stationery</option>
               </select>
             </div>
             <div>
