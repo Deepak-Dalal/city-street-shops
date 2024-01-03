@@ -1,8 +1,8 @@
 {
-  "name": "amazona",
+  "name": "city-street-shops",
   "type": "module",
   "version": "1.0.0",
-  "description": "Ecommerce website like amazon",
+  "description": "Ecommerce website for shopping online from street shops in a city",
   "main": "index.js",
   "scripts": {
     "build": "cd frontend && npm install && npm run build",
@@ -27,6 +27,7 @@
     "express-async-handler": "^1.1.4",
     "jsonwebtoken": "^8.5.1",
     "mailgun-js": "^0.22.0",
+    "mongodb": "^6.3.0",
     "mongoose": "^5.10.7",
     "multer": "^1.4.2",
     "nodemailer": "^6.7.0",

@@ -16,11 +16,16 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-mongoose.connect(process.env.MONGODB_URL || 'mongodb://localhost/amazona', {
+const db = mongoose.connect(process.env.MONGODB_URL || 'mongodb://localhost/city-street-shops', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true,
 });
+
+db.then(
+  () => console.log("Connected to mongoDB"),
+  err => console.log("DB connection Error: ", err),
+);
 
 app.use('/images',ImageRouter);
 app.use('/api/uploads', uploadRouter);
