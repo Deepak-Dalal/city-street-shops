@@ -302,26 +302,6 @@ export default function ProfileScreen() {
                     onChange={(e) => setDeliveryPrice(e.target.value)}
                   ></input>
                 </div>
-                <div>
-                  <label htmlFor="sellerPaymentAccountName">Seller Google Pay Name</label>
-                  <input
-                    id="sellerPaymentAccountName"
-                    type="text"
-                    placeholder="Enter Seller's Google Pay Name"
-                    value={sellerPaymentAccountName}
-                    onChange={(e) => setSellerPaymentAccountName(e.target.value)}
-                  ></input>
-                </div>
-                <div>
-                  <label htmlFor="sellerPaymentMobileNumber">Seller Google Pay Mobile Number</label>
-                  <input
-                    id="sellerPaymentMobileNumber"
-                    type="text"
-                    placeholder="Enter Seller's Google Pay Mobile Number"
-                    value={sellerPaymentMobileNumber}
-                    onChange={(e) => setSellerPaymentMobileNumber(e.target.value)}
-                  ></input>
-                </div>
                 {/* <div>
                   <label htmlFor="sellerCategory">sellerCategory</label>
                   <select id="sellerCategory" onChange={(e) => setSellerCategory(e.target.value)}>

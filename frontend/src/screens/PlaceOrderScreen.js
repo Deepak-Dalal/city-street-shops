@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { createOrder } from '../actions/orderActions';
@@ -7,6 +7,7 @@ import { ORDER_CREATE_RESET } from '../constants/orderConstants';
 import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
 import { detailsProduct } from '../actions/productActions';
+import axios from 'axios';
 
 export default function PlaceOrderScreen(props) {
   const cart = useSelector((state) => state.cart);
@@ -19,6 +20,11 @@ export default function PlaceOrderScreen(props) {
 
   const orderCreate = useSelector((state) => state.orderCreate);
   const { loading, success, error, order } = orderCreate;
+  const { userInfo } = useSelector((state) => state.userSignin);
+  const { name, email } = userInfo;
+
+  const [loadingRazorPay, setLoadingRazorPay] = useState(false);
+
   const toPrice = (num) => Number(num.toFixed(2)); // 5.123 => "5.12" => 5.12
   cart.itemsPrice = toPrice(
     cart.cartItems.reduce((a, c) => a + c.qty * c.price, 0)
@@ -28,9 +34,74 @@ export default function PlaceOrderScreen(props) {
   cart.taxPrice = 0;
   cart.totalPrice = cart.itemsPrice + cart.shippingPrice + cart.taxPrice;
   const dispatch = useDispatch();
-  const placeOrderHandler = () => {
-    dispatch(createOrder({ ...cart, orderItems: cart.cartItems }));
+  const placeOrderHandler = (razorpayOrderAndPaymentData) => {
+    dispatch(createOrder({ 
+      ...cart,
+      orderItems: cart.cartItems,
+      ...(cart.paymentMethod === 'razorpay' && { ...razorpayOrderAndPaymentData }) }));
   };
+
+  function loadRazorpay() {
+    const script = document.createElement('script');
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.onerror = () => {
+      alert('Razorpay SDK failed to load. Are you online?');
+    };
+    script.onload = async () => {
+      try {
+        setLoadingRazorPay(true);
+        const result = await axios.post('/api/orders/create-razorpay-order', {
+          amount: cart.totalPrice + '00',
+        },{
+            headers: {
+              Authorization: `Bearer ${userInfo.token}`,
+            },
+        });
+        const { amount, id: order_id, currency } = result.data;
+        const {
+          data: { key: razorpayKey },
+        } = await axios.get('/api/orders/get-razorpay-key', {
+            headers: {
+              Authorization: `Bearer ${userInfo.token}`,
+            },});
+
+        const options = {
+          key: razorpayKey,
+          amount: amount.toString(),
+          currency: currency,
+          name,
+          description: 'online purchase transaction',
+          order_id: order_id,
+          handler: async function (response) {
+            placeOrderHandler({
+              razorpayPaymentId: response.razorpay_payment_id,
+              razorpayOrderId: response.razorpay_order_id,
+              razorpaySignature: response.razorpay_signature,
+            });
+          },
+          prefill: {
+            name,
+            email,
+          },
+          notes: {
+            address: '',
+          },
+          theme: {
+            color: '#80c0f0',
+          },
+        };
+
+        setLoadingRazorPay(false);
+        const paymentObject = new window.Razorpay(options);
+        paymentObject.open();
+      } catch (err) {
+        alert(err);
+        setLoadingRazorPay(false);
+      }
+    };
+    document.body.appendChild(script);
+  }
+
   useEffect(() => {
     if (success) {
       props.history.push(`/order/${order._id}`);
@@ -143,13 +214,15 @@ export default function PlaceOrderScreen(props) {
               <li>
                 <button
                   type="button"
-                  onClick={placeOrderHandler}
+                  onClick={() => cart.paymentMethod === 'razorpay' ? loadRazorpay() : placeOrderHandler()}
                   className="primary block"
                   disabled={cart.cartItems.length === 0}
                 >
                   Place Order
                 </button>
               </li>
+              <br/>
+              {loadingRazorPay && <LoadingBox></LoadingBox>}
               {loading && <LoadingBox></LoadingBox>}
               {error && <MessageBox variant="danger">{error}</MessageBox>}
             </ul>

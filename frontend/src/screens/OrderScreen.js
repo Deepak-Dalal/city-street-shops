@@ -213,26 +213,7 @@ export default function OrderScreen(props) {
                     <strong>₹{order.totalPrice.toFixed(2)}</strong>
                   </div>
                 </div>
-              </li>
-              <li>
-                <ul>
-                  <li>
-                    <h2>Seller's Google Pay Account Information</h2>
-                  </li> 
-                  <li>
-                    <div className="row">
-                      <div><strong>Account Name:</strong></div>
-                      <div>{order.seller.seller.googlePayName}</div>
-                    </div>
-                  </li>  
-                  <li> 
-                    <div className="row">
-                      <div><strong>Google Pay Mobile Number:</strong></div>
-                      <div>{order.seller.seller.googlePayMobileNumber}</div> 
-                    </div>  
-                  </li> 
-                </ul> 
-              </li>           
+              </li>        
               {
                 (userInfo.isAdmin || userInfo.isSeller) && !order.isPaid && (
                   <li>

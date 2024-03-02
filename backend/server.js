@@ -22,10 +22,8 @@ const db = mongoose.connect(process.env.MONGODB_URL || 'mongodb://localhost/city
   useCreateIndex: true,
 });
 
-db.then(
-  () => console.log("Connected to mongoDB"),
-  err => console.log("DB connection Error: ", err),
-);
+db.then(() => console.log("Connected to mongoDB"))
+.catch((err) => console.log("DB connection Error: ", err));
 
 app.use('/images',ImageRouter);
 app.use('/api/uploads', uploadRouter);
@@ -40,10 +38,14 @@ app.get('/api/config/google', (req, res) => {
 });
 const __dirname = path.resolve();
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
-app.use(express.static(path.join(__dirname, '/frontend/build')));
-app.get('*', (req, res) =>
-  res.sendFile(path.join(__dirname, '/frontend/build/index.html'))
-);
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, '/frontend/build')));
+  app.get('*', (req, res) =>
+    res.sendFile(path.join(__dirname, '/frontend/build/index.html'))
+  );
+}
+
 // app.get('/', (req, res) => {
 //   res.send('Server is ready');
 // });

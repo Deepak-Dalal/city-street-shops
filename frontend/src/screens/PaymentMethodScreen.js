@@ -40,13 +40,13 @@ export default function PaymentMethodScreen(props) {
           <div>
             <input
               type="radio"
-              id="googlePay"
-              value="Google Pay"
+              id="razorpay"
+              value="razorpay"
               name="paymentMethod"
               required
               onChange={(e) => setPaymentMethod(e.target.value)}
             ></input>
-            <label htmlFor="googlePay">Google Pay</label>
+            <label htmlFor="razorpay">Online (Razorpay gateway)</label>
           </div>
         </div>
         <div>

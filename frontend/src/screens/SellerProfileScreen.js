@@ -55,14 +55,6 @@ export default function SellerProfileScreen(props) {
                         <div className="key-value-pair">{user.address}</div>
                     </li>
                     <li className="pairs-list-item">
-                        <div className="key-value-pair"><strong>Google Pay Name</strong></div>
-                        <div className="key-value-pair">{user.seller.googlePayName}</div>
-                    </li>
-                    <li className="pairs-list-item">
-                        <div className="key-value-pair"><strong>Google Pay Mobile Number</strong></div>
-                        <div className="key-value-pair">{user.seller.googlePayMobileNumber}</div>
-                    </li>
-                    <li className="pairs-list-item">
                         <div className="key-value-pair"><strong>Number of Reviews</strong></div>
                         <div className="key-value-pair">{user.seller.numReviews}</div>
                     </li>

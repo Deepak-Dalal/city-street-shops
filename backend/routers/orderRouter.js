@@ -1,4 +1,5 @@
 import express from 'express';
+import Razorpay from 'razorpay';
 import expressAsyncHandler from 'express-async-handler';
 import Order from '../models/orderModel.js';
 import User from '../models/userModel.js';
@@ -90,6 +91,14 @@ orderRouter.get(
   })
 );
 
+orderRouter.get(
+  '/get-razorpay-key',
+  isAuth,
+  expressAsyncHandler(async (req, res) => {
+     res.send({ key: process.env.RAZORPAY_KEY_ID });
+  }),
+);
+
 orderRouter.post(
   '/',
   isAuth,
@@ -107,6 +116,15 @@ orderRouter.post(
         taxPrice: req.body.taxPrice,
         totalPrice: req.body.totalPrice,
         user: req.user._id,
+        ...(req.body.paymentMethod === 'razorpay' && {
+          razorpay: {
+              orderId: req.razorpayOrderId,
+              paymentId: req.razorpayPaymentId,
+              signature: req.razorpaySignature,
+            },
+          isPaid: true,
+          paidAt: new Date(),
+        }),
       });
       const createdOrder = await order.save();
 
@@ -232,6 +250,28 @@ orderRouter.put(
       res.send({ message: 'Order Delivered', order: updatedOrder });
     } else {
       res.status(404).send({ message: 'Order Not Found' });
+    }
+  })
+);
+
+orderRouter.post(
+  '/create-razorpay-order',
+  isAuth,
+  expressAsyncHandler(async (req, res) => {
+    try {
+      const instance = new Razorpay({
+        key_id: process.env.RAZORPAY_KEY_ID,
+        key_secret: process.env.RAZORPAY_SECRET,
+      });
+      const options = {
+        amount: req.body.amount,
+        currency: 'INR',
+      };
+      const order = await instance.orders.create(options);
+      if (!order) return res.status(500).send('Some error occured');
+      res.send(order);
+    } catch (error) {
+      res.status(500).send(error);
     }
   })
 );
